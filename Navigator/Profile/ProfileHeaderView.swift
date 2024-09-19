@@ -81,13 +81,15 @@ class ProfileHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        
+        
         addSubview(imageView)
         addSubview(labelName)
         addSubview(button)
         addSubview(labelWaiting)
         addSubview(textField)
         
-        backgroundColor = .lightGray
+        backgroundColor = .systemBackground
         
         NSLayoutConstraint.activate([
             
