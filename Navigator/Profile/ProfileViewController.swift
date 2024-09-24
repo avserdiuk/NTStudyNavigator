@@ -20,6 +20,7 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
         title = "Profile"
         view.backgroundColor = .systemGroupedBackground
         
@@ -37,19 +38,46 @@ class ProfileViewController: UIViewController {
 
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        posts.count
+        if section == 1 {
+            return posts.count
+        } else {
+            return 1
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = PostTableViewCell()
-        cell.setup(post: posts[indexPath.row])
-        return cell
+        
+        if indexPath.section == 1 {
+            let cell = PostTableViewCell()
+            cell.setup(post: posts[indexPath.row])
+            cell.selectionStyle = .none
+            return cell
+        } else {
+            let cell = PhotosTableViewCell()
+            cell.selectionStyle = .none
+            return cell
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        ProfileHeaderView()
+        if section == 0 {
+            return ProfileHeaderView()
+        } else {
+            return nil
+        }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            navigationController?.pushViewController(PhotosViewController(), animated: true)
+        }
+    }
     
 }
