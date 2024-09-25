@@ -11,10 +11,10 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0FB98D272C9A8F7F00A4592D /* Exceptions for "Navigator" folder in "Navigator" target */ = {
+		0F7486BE2C9BE5E8009A2816 /* Exceptions for "Navigator" folder in "Navigator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				App/Info.plist,
+				Info.plist,
 			);
 			target = 0FB98D142C9A8F7E00A4592D /* Navigator */;
 		};
@@ -24,7 +24,7 @@
 		0FB98D172C9A8F7E00A4592D /* Navigator */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0FB98D272C9A8F7F00A4592D /* Exceptions for "Navigator" folder in "Navigator" target */,
+				0F7486BE2C9BE5E8009A2816 /* Exceptions for "Navigator" folder in "Navigator" target */,
 			);
 			path = Navigator;
 			sourceTree = "<group>";
