@@ -10,6 +10,7 @@ import UIKit
 class ProfileHeaderView: UIView {
     
     private var statusText : String?
+    var delegate: ProfileViewController?
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -20,6 +21,8 @@ class ProfileHeaderView: UIView {
         imageView.layer.cornerRadius = 50
         imageView.layer.borderColor = CGColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
         imageView.layer.borderWidth = 3
+        
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -116,10 +119,19 @@ class ProfileHeaderView: UIView {
             textField.trailingAnchor.constraint(equalTo: button.trailingAnchor),
             
         ])
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        imageView.addGestureRecognizer(tap)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func imageTapped(){
+        if let delegate {
+            delegate.showAnimation()
+        }
     }
     
     @objc func buttonPressed(){
