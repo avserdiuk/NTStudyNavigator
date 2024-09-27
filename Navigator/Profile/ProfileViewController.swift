@@ -65,6 +65,10 @@ class ProfileViewController: UIViewController {
         view.addSubview(imageView)
         view.addSubview(imageViewClose)
         
+        #if DEBUG
+            view.backgroundColor = .systemBlue
+        #endif
+        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
