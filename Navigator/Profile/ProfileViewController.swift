@@ -10,6 +10,7 @@ import StorageServices
 
 class ProfileViewController: UIViewController {
     
+    var user: User?
     private lazy var startPosition: CGPoint = imageView.center
     
     private lazy var tableView : UITableView = {
@@ -65,9 +66,7 @@ class ProfileViewController: UIViewController {
         view.addSubview(imageView)
         view.addSubview(imageViewClose)
         
-        #if DEBUG
-            view.backgroundColor = .systemBlue
-        #endif
+        
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -166,6 +165,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             let view = ProfileHeaderView()
+            view.setup(user: user!)
             view.delegate = self
             return view
         } else {

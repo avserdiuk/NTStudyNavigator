@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StorageServices
 
 class ProfileHeaderView: UIView {
     
@@ -84,8 +85,6 @@ class ProfileHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        
-        
         addSubview(imageView)
         addSubview(labelName)
         addSubview(button)
@@ -141,6 +140,12 @@ class ProfileHeaderView: UIView {
     
     @objc func statusTextChanged(_ textField: UITextField){
         statusText = textField.text
+    }
+    
+    func setup(user: User){
+        imageView.image = user.avatar
+        labelName.text = user.login
+        labelWaiting.text = user.status
     }
 }
 

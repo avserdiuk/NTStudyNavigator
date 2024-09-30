@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StorageServices
 
 class LogInViewController: UIViewController {
     
@@ -151,7 +152,24 @@ class LogInViewController: UIViewController {
     }
     
     @objc private func goTo(){
-        navigationController?.pushViewController(ProfileViewController(), animated: true)
+        let login = textFieldLogin.text ?? ""
+        
+        var service : UserService = CurrentUserService()
+        
+        #if DEBUG
+            service = TestUserService()
+        #endif
+        
+        if let user = service.auth(login: login)  {
+            let vc = ProfileViewController()
+                vc.user = user
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            let alert = UIAlertController(title: "Ошибка!", message: "Не верный логин", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Повторить", style: .cancel))
+            present(alert, animated: true)
+        }
+        
     }
     
     @objc func keyboardShow(_ notification: Notification){
