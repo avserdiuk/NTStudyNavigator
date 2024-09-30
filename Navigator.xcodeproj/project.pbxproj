@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0F5764552CA684CA0026753E /* StorageServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F57644F2CA684CA0026753E /* StorageServices.framework */; };
 		0F5764562CA684CA0026753E /* StorageServices.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0F57644F2CA684CA0026753E /* StorageServices.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0F7F8AB72CAA6F5B00515B61 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0F7F8AB62CAA6F5B00515B61 /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +49,7 @@
 			);
 			target = 0F57644E2CA684CA0026753E /* StorageServices */;
 		};
-		0F7486BE2C9BE5E8009A2816 /* Exceptions for "Navigator" folder in "Navigator" target */ = {
+		0F7F8AAF2CAA6D7500515B61 /* Exceptions for "Navigator" folder in "Navigator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -66,10 +67,10 @@
 			path = StorageServices;
 			sourceTree = "<group>";
 		};
-		0FB98D172C9A8F7E00A4592D /* Navigator */ = {
+		0F7F8A9E2CAA6D7500515B61 /* Navigator */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0F7486BE2C9BE5E8009A2816 /* Exceptions for "Navigator" folder in "Navigator" target */,
+				0F7F8AAF2CAA6D7500515B61 /* Exceptions for "Navigator" folder in "Navigator" target */,
 			);
 			path = Navigator;
 			sourceTree = "<group>";
@@ -89,6 +90,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0F5764552CA684CA0026753E /* StorageServices.framework in Frameworks */,
+				0F7F8AB72CAA6F5B00515B61 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +100,7 @@
 		0FB98D0C2C9A8F7E00A4592D = {
 			isa = PBXGroup;
 			children = (
-				0FB98D172C9A8F7E00A4592D /* Navigator */,
+				0F7F8A9E2CAA6D7500515B61 /* Navigator */,
 				0F5764502CA684CA0026753E /* StorageServices */,
 				0FB98D162C9A8F7E00A4592D /* Products */,
 			);
@@ -164,10 +166,11 @@
 				0F5764542CA684CA0026753E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				0FB98D172C9A8F7E00A4592D /* Navigator */,
+				0F7F8A9E2CAA6D7500515B61 /* Navigator */,
 			);
 			name = Navigator;
 			packageProductDependencies = (
+				0F7F8AB62CAA6F5B00515B61 /* SnapKit */,
 			);
 			productName = Navigator;
 			productReference = 0FB98D152C9A8F7E00A4592D /* Navigator.app */;
@@ -201,6 +204,9 @@
 			);
 			mainGroup = 0FB98D0C2C9A8F7E00A4592D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0F7F8AB52CAA6F5B00515B61 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0FB98D162C9A8F7E00A4592D /* Products */;
 			projectDirPath = "";
@@ -528,6 +534,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0F7F8AB52CAA6F5B00515B61 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0F7F8AB62CAA6F5B00515B61 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0F7F8AB52CAA6F5B00515B61 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0FB98D0D2C9A8F7E00A4592D /* Project object */;
 }

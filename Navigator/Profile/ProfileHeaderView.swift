@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class ProfileHeaderView: UIView {
     
@@ -94,31 +95,62 @@ class ProfileHeaderView: UIView {
         
         backgroundColor = .systemBackground
         
-        NSLayoutConstraint.activate([
-            
-            imageView.topAnchor.constraint(equalTo: super.safeAreaLayoutGuide.topAnchor, constant: 16),
-            imageView.leadingAnchor.constraint(equalTo: super.leadingAnchor, constant: 16),
-            imageView.heightAnchor.constraint(equalToConstant: 100),
-            imageView.widthAnchor.constraint(equalToConstant: 100),
-            
-            labelName.topAnchor.constraint(equalTo: super.safeAreaLayoutGuide.topAnchor, constant: 27),
-            labelName.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 27),
-            
-            button.leadingAnchor.constraint(equalTo: super.leadingAnchor, constant: 16),
-            button.trailingAnchor.constraint(equalTo: super.trailingAnchor, constant: -16),
-            button.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
-            button.heightAnchor.constraint(equalToConstant: 50),
-            button.bottomAnchor.constraint(equalTo: super.bottomAnchor, constant: -16),
-            
-            labelWaiting.leadingAnchor.constraint(equalTo: labelName.leadingAnchor),
-            labelWaiting.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -60),
-            
-            textField.leadingAnchor.constraint(equalTo: labelName.leadingAnchor),
-            textField.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -10),
-            textField.heightAnchor.constraint(equalToConstant: 40),
-            textField.trailingAnchor.constraint(equalTo: button.trailingAnchor),
-            
-        ])
+//        NSLayoutConstraint.activate([
+//            
+//            imageView.topAnchor.constraint(equalTo: super.safeAreaLayoutGuide.topAnchor, constant: 16),
+//            imageView.leadingAnchor.constraint(equalTo: super.leadingAnchor, constant: 16),
+//            imageView.heightAnchor.constraint(equalToConstant: 100),
+//            imageView.widthAnchor.constraint(equalToConstant: 100),
+//            
+//            labelName.topAnchor.constraint(equalTo: super.safeAreaLayoutGuide.topAnchor, constant: 27),
+//            labelName.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 27),
+//            
+//            button.leadingAnchor.constraint(equalTo: super.leadingAnchor, constant: 16),
+//            button.trailingAnchor.constraint(equalTo: super.trailingAnchor, constant: -16),
+//            button.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
+//            button.heightAnchor.constraint(equalToConstant: 50),
+//            button.bottomAnchor.constraint(equalTo: super.bottomAnchor, constant: -16),
+//            
+//            labelWaiting.leadingAnchor.constraint(equalTo: labelName.leadingAnchor),
+//            labelWaiting.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -60),
+//            
+//            textField.leadingAnchor.constraint(equalTo: labelName.leadingAnchor),
+//            textField.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -10),
+//            textField.heightAnchor.constraint(equalToConstant: 40),
+//            textField.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+//            
+//        ])
+        
+        imageView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().offset(16)
+            make.left.equalToSuperview().offset(16)
+            make.size.equalTo(CGSize(width: 100, height: 100))
+        }
+        
+        labelName.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(27)
+            make.left.equalTo(imageView.snp.right).offset(27)
+        }
+        
+        button.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(16)
+            make.right.equalToSuperview().offset(-16)
+            make.top.equalTo(imageView.snp.bottom).offset(16)
+            make.bottom.equalToSuperview().offset(-16)
+            make.height.equalTo(50)
+        }
+        
+        labelWaiting.snp.makeConstraints { make in
+            make.leading.equalTo(labelName.snp.leading)
+            make.top.equalTo(labelName.snp.bottom).offset(7)
+        }
+        
+        textField.snp.makeConstraints { make in
+            make.leading.equalTo(labelName.snp.leading)
+            make.bottom.equalTo(button.snp.top).offset(-10)
+            make.height.equalTo(40)
+            make.trailing.equalTo(button.snp.trailing)
+        }
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         imageView.addGestureRecognizer(tap)
