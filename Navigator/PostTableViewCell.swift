@@ -7,8 +7,11 @@
 
 import UIKit
 import StorageServices
+import iOSIntPackage
 
 class PostTableViewCell: UITableViewCell {
+    
+    private let processor = ImageProcessor()
     
     private lazy var labelTitle: UILabel = {
         let label = UILabel()
@@ -95,6 +98,11 @@ class PostTableViewCell: UITableViewCell {
     
     func setup(post: Post){
         labelTitle.text = post.author
+        
+//        processor.processImage(sourceImage: UIImage(named: post.image) ?? UIImage(), filter: .allCases.randomElement() ?? .chrome) { image in
+//            self.image.image = image
+//        }
+        
         image.image = UIImage(named: post.image)
         labelDescription.text = post.description
         labelLikes.text = "Likes: \(post.likes)"

@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 class PhotosTableViewCell : UITableViewCell {
     
     private lazy var labelTitle : UILabel = {
