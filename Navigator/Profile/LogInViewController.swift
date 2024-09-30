@@ -154,7 +154,7 @@ class LogInViewController: UIViewController {
     @objc private func goTo(){
         let login = textFieldLogin.text ?? ""
         
-        var service : UserService = CurrentUserService()
+        var service : UserService = CurrentUserService(user: User(login: "Alf", password: "123", avatar: UIImage(named: "alf")!, status: "Gordon «Alf» Shumway"))
         
         #if DEBUG
             service = TestUserService()
