@@ -10,6 +10,8 @@ import StorageServices
 
 class LogInViewController: UIViewController {
     
+    var loginDelegate: LoginViewControllerDelegate?
+    
     private lazy var scrollView : UIScrollView = {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
@@ -153,6 +155,7 @@ class LogInViewController: UIViewController {
     
     @objc private func goTo(){
         let login = textFieldLogin.text ?? ""
+        let password = textFieldPassword.text ?? ""
         
         var service : UserService = CurrentUserService(user: User(login: "Alf", password: "123", avatar: UIImage(named: "alf")!, status: "Gordon «Alf» Shumway"))
         
@@ -160,9 +163,11 @@ class LogInViewController: UIViewController {
             service = TestUserService()
         #endif
         
-        if let user = service.auth(login: login)  {
+        
+        //if let user = service.auth(login: login)  {
+        if loginDelegate?.check(login: login, password: password) == true {
             let vc = ProfileViewController()
-                vc.user = user
+            vc.user = service.user
             navigationController?.pushViewController(vc, animated: true)
         } else {
             let alert = UIAlertController(title: "Ошибка!", message: "Не верный логин", preferredStyle: .alert)

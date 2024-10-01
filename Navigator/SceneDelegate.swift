@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StorageServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,7 +19,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         
         let feedViewController = UINavigationController(rootViewController: FeedViewController())
-        let profileViewController = UINavigationController(rootViewController: LogInViewController())
+        
+        let vc = LogInViewController()
+        vc.loginDelegate = MyLoginFactory().makeLoginInspector()
+        let profileViewController = UINavigationController(rootViewController: vc)
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [feedViewController, profileViewController]
