@@ -33,4 +33,8 @@ class PhotosCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func setup(image: UIImage){
+        imageView.image = image
+    }
 }

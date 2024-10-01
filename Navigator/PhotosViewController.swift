@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import iOSIntPackage
 
-class PhotosViewController: UIViewController {
+class PhotosViewController: UIViewController, ImageLibrarySubscriber {
+    
+    let facade = ImagePublisherFacade()
+    var images : [UIImage] = []
     
     private lazy var layout : UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -36,7 +40,6 @@ class PhotosViewController: UIViewController {
         
         view.addSubview(collectionView)
         
-        
         NSLayoutConstraint.activate([
             
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
@@ -47,16 +50,28 @@ class PhotosViewController: UIViewController {
         ])
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        facade.subscribe(self)
+        facade.addImagesWithTimer(time: 0.5, repeat: 20)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        facade.removeSubscription(for: self)
+    }
 }
 
 extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        40
+        images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Custom", for: indexPath) as! PhotosCollectionViewCell
+        //cell.setup(image: images[indexPath.item])
         return cell
     }
     
@@ -64,6 +79,12 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let screenWidth = view.frame.width
         let size = (screenWidth - 54) / 3
         return CGSize(width: size, height: size)
+    }
+    
+    func receive(images: [UIImage]) {
+        
+        self.images = images
+        collectionView.reloadData()
     }
     
     
