@@ -18,7 +18,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let feedViewController = UINavigationController(rootViewController: FeedViewController())
+        let feedVc = FeedViewController()
+        feedVc.viewModel = FeedModel()
+        let feedViewController = UINavigationController(rootViewController: feedVc)
+        
         
         let vc = LogInViewController()
         vc.loginDelegate = MyLoginFactory().makeLoginInspector()
