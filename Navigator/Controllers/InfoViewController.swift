@@ -16,11 +16,13 @@ class InfoViewController: UIViewController{
         return button
     }()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         view.addSubview(button)
         button.center = view.center
+        
         
     }
     
