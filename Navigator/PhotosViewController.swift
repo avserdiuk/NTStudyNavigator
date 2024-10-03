@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import iOSIntPackage
 
 class PhotosViewController: UIViewController {
+    
+    let imageProcessor = ImageProcessor()
+    var images = [UIImage] (repeating: UIImage(named: "alf")!, count: 10)
     
     private lazy var layout : UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -34,8 +38,26 @@ class PhotosViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
         title = "Photo Gallery"
         
-        view.addSubview(collectionView)
+        let time1 = NSDate().timeIntervalSince1970
         
+        imageProcessor.processImagesOnThread(sourceImages: images, filter: .chrome, qos: .userInteractive) { newImages in
+            DispatchQueue.main.async {
+                
+                self.images = []
+                
+                newImages.forEach { imga in
+                    let img = UIImage(cgImage: imga!)
+                    self.images.append(img)
+                }
+                
+                self.collectionView.reloadData()
+                
+                let time2 = NSDate().timeIntervalSince1970
+                //print("done at ", time2-time1)
+            }
+        }
+        
+        view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
             
@@ -47,16 +69,18 @@ class PhotosViewController: UIViewController {
         ])
         
     }
+    
 }
 
 extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        40
+        images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Custom", for: indexPath) as! PhotosCollectionViewCell
+        cell.setup(image: images[indexPath.item])
         return cell
     }
     
@@ -65,6 +89,5 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let size = (screenWidth - 54) / 3
         return CGSize(width: size, height: size)
     }
-    
     
 }

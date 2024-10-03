@@ -8,7 +8,14 @@
 import UIKit
 
 public protocol UserService {
+    var user: User { get set}
     func auth(login: String) -> User?
+}
+
+extension UserService {
+    public func auth(login: String) -> User? {
+        login == user.login ? user : nil
+    }
 }
 
 public class User {
@@ -26,22 +33,14 @@ public class User {
 }
 
 public class CurrentUserService : UserService {
-    var user: User
+    public var user: User
     
-    public init() {
-        self.user = User(login: "Alf", password: "123", avatar: UIImage(named: "alf")!, status: "Gordon «Alf» Shumway")
-    }
-    
-    public func auth(login: String) -> User? {
-        login == user.login ? user : nil
+    public init(user: User) {
+        self.user = user
     }
 }
 
 public class TestUserService : UserService {
     public var user: User = User(login: "test", password: "123", avatar: UIImage(named: "alf")!, status: "test «test» test")
     public init(){}
-    
-    public func auth(login: String) -> User? {
-        login == user.login ? user : nil
-    }
 }
