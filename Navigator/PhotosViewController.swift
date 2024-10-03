@@ -8,10 +8,10 @@
 import UIKit
 import iOSIntPackage
 
-class PhotosViewController: UIViewController, ImageLibrarySubscriber {
+class PhotosViewController: UIViewController {
     
-    let facade = ImagePublisherFacade()
-    var images : [UIImage] = []
+    let imageProcessor = ImageProcessor()
+    var images = [UIImage] (repeating: UIImage(named: "alf")!, count: 10)
     
     private lazy var layout : UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -38,6 +38,25 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
         navigationController?.navigationBar.isHidden = false
         title = "Photo Gallery"
         
+        let time1 = NSDate().timeIntervalSince1970
+        
+        imageProcessor.processImagesOnThread(sourceImages: images, filter: .chrome, qos: .userInteractive) { newImages in
+            DispatchQueue.main.async {
+                
+                self.images = []
+                
+                newImages.forEach { imga in
+                    let img = UIImage(cgImage: imga!)
+                    self.images.append(img)
+                }
+                
+                self.collectionView.reloadData()
+                
+                let time2 = NSDate().timeIntervalSince1970
+                //print("done at ", time2-time1)
+            }
+        }
+        
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
@@ -51,16 +70,6 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        facade.subscribe(self)
-        facade.addImagesWithTimer(time: 0.5, repeat: 20)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        facade.removeSubscription(for: self)
-    }
 }
 
 extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -71,7 +80,7 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Custom", for: indexPath) as! PhotosCollectionViewCell
-        //cell.setup(image: images[indexPath.item])
+        cell.setup(image: images[indexPath.item])
         return cell
     }
     
@@ -80,12 +89,5 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let size = (screenWidth - 54) / 3
         return CGSize(width: size, height: size)
     }
-    
-    func receive(images: [UIImage]) {
-        
-        self.images = images
-        collectionView.reloadData()
-    }
-    
     
 }
