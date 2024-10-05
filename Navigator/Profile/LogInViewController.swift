@@ -82,6 +82,22 @@ class LogInViewController: UIViewController {
         return btn
     }()
     
+    private lazy var buttonBrut: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("Подобрать пароль", for: .normal)
+        btn.setTitleColor(.black, for: .normal)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.addTarget(self, action: #selector(brutPassword), for: .touchUpInside)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        return btn
+    }()
+    
+    private lazy var activity: UIActivityIndicatorView = {
+       let activity = UIActivityIndicatorView(style: .medium)
+        activity.translatesAutoresizingMaskIntoConstraints = false
+        return activity
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -95,6 +111,9 @@ class LogInViewController: UIViewController {
         stackView.addArrangedSubview(textFieldLogin)
         stackView.addArrangedSubview(hl)
         stackView.addArrangedSubview(textFieldPassword)
+        
+        view.addSubview(buttonBrut)
+        view.addSubview(activity)
         
         scrollView.addSubview(buttonLogin)
         
@@ -114,6 +133,12 @@ class LogInViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             stackView.heightAnchor.constraint(equalToConstant: 100),
             stackView.topAnchor.constraint(equalTo: imageViewLogo.bottomAnchor, constant: 120),
+            
+            buttonBrut.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonBrut.topAnchor.constraint(equalTo: buttonLogin.bottomAnchor, constant: 10),
+            
+            activity.centerXAnchor.constraint(equalTo: textFieldPassword.centerXAnchor),
+            activity.centerYAnchor.constraint(equalTo: textFieldPassword.centerYAnchor),
             
             textFieldLogin.heightAnchor.constraint(equalToConstant: 49.75),
             textFieldPassword.heightAnchor.constraint(equalToConstant: 49.75),
@@ -152,6 +177,38 @@ class LogInViewController: UIViewController {
         view.endEditing(true)
         keyboardHide()
     }
+    
+    @objc private func brutPassword(){
+        let password = "1231T"
+        self.activity.startAnimating()
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.bruteForce(passwordToUnlock: password)
+        }
+    }
+    
+    func bruteForce(passwordToUnlock: String) {
+        let ALLOWED_CHARACTERS:   [String] = String().printable.map { String($0) }
+
+        var password: String = ""
+
+        // Will strangely ends at 0000 instead of ~~~
+        while password != passwordToUnlock { // Increase MAXIMUM_PASSWORD_SIZE value for more
+            password = generateBruteForce(password, fromArray: ALLOWED_CHARACTERS)
+            // Your stuff here
+//                print(password)
+            // Your stuff here
+        }
+        
+        print(password)
+        DispatchQueue.main.async {
+            self.activity.stopAnimating()
+            self.textFieldPassword.isSecureTextEntry = false
+            self.textFieldPassword.text = password
+        }
+        
+    }
+
     
     @objc private func goTo(){
         let login = textFieldLogin.text ?? ""
