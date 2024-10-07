@@ -8,6 +8,10 @@
 import UIKit
 import StorageServices
 
+enum LoginError: Error {
+    case invalidLogin
+}
+
 class LogInViewController: UIViewController {
     
     var loginDelegate: LoginViewControllerDelegate?
@@ -220,18 +224,30 @@ class LogInViewController: UIViewController {
             service = TestUserService()
         #endif
         
+        do {
+            try checkAccess(login: login, password: password, service: service)
+        } catch {
+            switch error {
+            case LoginError.invalidLogin:
+                let alert = UIAlertController(title: "Ошибка!", message: "Не верный логин", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Повторить", style: .cancel))
+                present(alert, animated: true)
+            default:
+                return
+            }
+        }
         
-        //if let user = service.auth(login: login)  {
+        
+    }
+    
+    func checkAccess(login: String, password: String, service: UserService) throws {
         if loginDelegate?.check(login: login, password: password) == true {
             let vc = ProfileViewController()
             vc.user = service.user
             navigationController?.pushViewController(vc, animated: true)
         } else {
-            let alert = UIAlertController(title: "Ошибка!", message: "Не верный логин", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Повторить", style: .cancel))
-            present(alert, animated: true)
+            throw LoginError.invalidLogin
         }
-        
     }
     
     @objc func keyboardShow(_ notification: Notification){
@@ -251,7 +267,6 @@ class LogInViewController: UIViewController {
     }
     
     @objc func keyboardHide(){
-        print(#function)
         scrollView.contentOffset = CGPoint(x: 0, y: 0)
     }
 }
