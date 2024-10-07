@@ -94,6 +94,11 @@ class ProfileViewController: UIViewController {
         imageViewClose.addGestureRecognizer(tapClose)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     func showAnimation(){
         print(imageView.center)
         print(startPosition)

@@ -12,6 +12,7 @@ class PhotosViewController: UIViewController {
     
     let imageProcessor = ImageProcessor()
     var images = [UIImage] (repeating: UIImage(named: "alf")!, count: 10)
+    var timer: Timer?
     
     private lazy var layout : UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -37,25 +38,9 @@ class PhotosViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = false
         title = "Photo Gallery"
+       
         
-        let time1 = NSDate().timeIntervalSince1970
-        
-        imageProcessor.processImagesOnThread(sourceImages: images, filter: .chrome, qos: .userInteractive) { newImages in
-            DispatchQueue.main.async {
-                
-                self.images = []
-                
-                newImages.forEach { imga in
-                    let img = UIImage(cgImage: imga!)
-                    self.images.append(img)
-                }
-                
-                self.collectionView.reloadData()
-                
-                let time2 = NSDate().timeIntervalSince1970
-                //print("done at ", time2-time1)
-            }
-        }
+        self.startFilter()
         
         view.addSubview(collectionView)
         
@@ -69,6 +54,45 @@ class PhotosViewController: UIViewController {
         ])
         
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        timer?.invalidate()
+        print("timer has invalidate")
+        
+    }
+    
+    func startFilter(){
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { _ in
+            
+            let time1 = NSDate().timeIntervalSince1970
+            
+            self.imageProcessor.processImagesOnThread(sourceImages: self.images, filter: .allCases.randomElement()!, qos: .userInteractive) { newImages in
+                DispatchQueue.main.async {
+                    
+                    self.images = []
+                    
+                    newImages.forEach { imga in
+                        let img = UIImage(cgImage: imga!)
+                        self.images.append(img)
+                    }
+                    
+                    self.collectionView.reloadData()
+                    
+                    let time2 = NSDate().timeIntervalSince1970
+                    print("done at ", time2-time1)
+                    
+                    
+                }
+            }
+            
+            print("timer has worked")
+        }
+    }
+    
+    
     
 }
 
