@@ -37,6 +37,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let appConfig = AppConfiguration.first
 //        NetworkService.request(for: appConfig)
         
+//        NetworkService.hw1()
+//        NetworkService.hw2()
+        
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
     }
