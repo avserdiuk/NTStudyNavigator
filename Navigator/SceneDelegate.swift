@@ -33,6 +33,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         feedViewController.tabBarItem = feedItem
         profileViewController.tabBarItem = profileItem
         
+        
+//        let appConfig = AppConfiguration.first
+//        NetworkService.request(for: appConfig)
+        
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
     }

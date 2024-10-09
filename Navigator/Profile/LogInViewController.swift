@@ -155,6 +155,7 @@ class LogInViewController: UIViewController {
             buttonLogin.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 16)
             
         ])
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
