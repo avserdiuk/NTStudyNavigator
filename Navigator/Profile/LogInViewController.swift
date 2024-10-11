@@ -7,6 +7,8 @@
 
 import UIKit
 import StorageServices
+import FirebaseCore
+import FirebaseAuth
 
 enum LoginError: Error {
     case invalidLogin
@@ -97,7 +99,7 @@ class LogInViewController: UIViewController {
     }()
     
     private lazy var activity: UIActivityIndicatorView = {
-       let activity = UIActivityIndicatorView(style: .medium)
+        let activity = UIActivityIndicatorView(style: .medium)
         activity.translatesAutoresizingMaskIntoConstraints = false
         return activity
     }()
@@ -183,6 +185,64 @@ class LogInViewController: UIViewController {
         keyboardHide()
     }
     
+    @objc private func goTo(){
+        let login = "alf6@test.ru" //textFieldLogin.text ?? ""
+        let password = "Qwerty123$%^" //textFieldPassword.text ?? ""
+        
+        CheckerService().checkCredentials(email: login, password: password) { result, text in
+            switch result {
+            case .failure( let error):
+                print(error.localizedDescription)
+                self.showAlert(title: "Error!", message: error.localizedDescription)
+            case .success(_):
+                if text != nil {
+                    self.showAlert(title: "Внимание!", message: "Создан новый пользователь") {
+                        self.showProfileViewController()
+                    }
+                } else {
+                    self.showProfileViewController()
+                }
+            }
+        }
+    }
+    
+    @objc
+    func showProfileViewController(){
+        let vc = ProfileViewController()
+        vc.user = self.getUser().user
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func getUser() -> UserService {
+        var service : UserService = CurrentUserService(user: User(login: "Alf", password: "123", avatar: UIImage(named: "alf")!, status: "Gordon «Alf» Shumway"))
+        
+    #if DEBUG
+            service = TestUserService()
+    #endif
+        
+        return service
+    }
+    
+    func checkAccess(login: String, password: String, service: UserService) throws {
+        if loginDelegate?.check(login: login, password: password) == true {
+            let vc = ProfileViewController()
+            vc.user = service.user
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            throw LoginError.invalidLogin
+        }
+    }
+    
+    private func showAlert(title: String, message: String, closure: (()->Void)? = nil) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {_ in 
+            if let closure {
+                closure()
+            }
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
     @objc private func brutPassword(){
         let password = "1231T"
         self.activity.startAnimating()
@@ -194,15 +254,11 @@ class LogInViewController: UIViewController {
     
     func bruteForce(passwordToUnlock: String) {
         let ALLOWED_CHARACTERS:   [String] = String().printable.map { String($0) }
-
+        
         var password: String = ""
-
-        // Will strangely ends at 0000 instead of ~~~
+        
         while password != passwordToUnlock { // Increase MAXIMUM_PASSWORD_SIZE value for more
             password = generateBruteForce(password, fromArray: ALLOWED_CHARACTERS)
-            // Your stuff here
-//                print(password)
-            // Your stuff here
         }
         
         print(password)
@@ -212,43 +268,6 @@ class LogInViewController: UIViewController {
             self.textFieldPassword.text = password
         }
         
-    }
-
-    
-    @objc private func goTo(){
-        let login = textFieldLogin.text ?? ""
-        let password = textFieldPassword.text ?? ""
-        
-        var service : UserService = CurrentUserService(user: User(login: "Alf", password: "123", avatar: UIImage(named: "alf")!, status: "Gordon «Alf» Shumway"))
-        
-        #if DEBUG
-            service = TestUserService()
-        #endif
-        
-        do {
-            try checkAccess(login: login, password: password, service: service)
-        } catch {
-            switch error {
-            case LoginError.invalidLogin:
-                let alert = UIAlertController(title: "Ошибка!", message: "Не верный логин", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Повторить", style: .cancel))
-                present(alert, animated: true)
-            default:
-                return
-            }
-        }
-        
-        
-    }
-    
-    func checkAccess(login: String, password: String, service: UserService) throws {
-        if loginDelegate?.check(login: login, password: password) == true {
-            let vc = ProfileViewController()
-            vc.user = service.user
-            navigationController?.pushViewController(vc, animated: true)
-        } else {
-            throw LoginError.invalidLogin
-        }
     }
     
     @objc func keyboardShow(_ notification: Notification){

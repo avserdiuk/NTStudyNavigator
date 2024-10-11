@@ -7,12 +7,12 @@
 
 import UIKit
 import StorageServices
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
         guard let scene = (scene as? UIWindowScene) else { return }
@@ -40,8 +40,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        NetworkService.hw1()
 //        NetworkService.hw2()
         
+        
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
