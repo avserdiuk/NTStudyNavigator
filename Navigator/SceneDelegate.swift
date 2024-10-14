@@ -24,14 +24,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         vc.loginDelegate = MyLoginFactory().makeLoginInspector()
         let profileViewController = UINavigationController(rootViewController: vc)
         
+        let contentViewController = UINavigationController(rootViewController: ContentViewController())
+        
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [feedViewController, profileViewController]
+        tabBarController.viewControllers = [feedViewController, profileViewController, contentViewController]
         
         let feedItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "newspaper"), tag: 0)
         let profileItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle"), tag: 1)
+        let contentItem = UITabBarItem(title: "Content", image: UIImage(systemName: "folder"), tag: 2)
         
         feedViewController.tabBarItem = feedItem
         profileViewController.tabBarItem = profileItem
+        contentViewController.tabBarItem = contentItem
         
         
 //        let appConfig = AppConfiguration.first
