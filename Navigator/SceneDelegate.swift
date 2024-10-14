@@ -25,17 +25,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let profileViewController = UINavigationController(rootViewController: vc)
         
         let contentViewController = UINavigationController(rootViewController: ContentViewController())
+        let passwordViewController = UINavigationController(rootViewController: PasswordViewController())
+        
         
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [feedViewController, profileViewController, contentViewController]
+        tabBarController.viewControllers = [feedViewController, profileViewController, contentViewController, passwordViewController]
         
         let feedItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "newspaper"), tag: 0)
         let profileItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle"), tag: 1)
         let contentItem = UITabBarItem(title: "Content", image: UIImage(systemName: "folder"), tag: 2)
+        let passwordItem = UITabBarItem(title: "Password", image: UIImage(systemName: "lock.square"), tag: 3)
         
         feedViewController.tabBarItem = feedItem
         profileViewController.tabBarItem = profileItem
         contentViewController.tabBarItem = contentItem
+        passwordViewController.tabBarItem = passwordItem
         
         
 //        let appConfig = AppConfiguration.first
