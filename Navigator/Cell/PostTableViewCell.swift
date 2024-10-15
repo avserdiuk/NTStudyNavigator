@@ -10,6 +10,9 @@ import StorageServices
 
 class PostTableViewCell: UITableViewCell {
     
+    var post: Post?
+    var tapRecognizer: Bool = false
+    
     private lazy var labelTitle: UILabel = {
         let label = UILabel()
         label.text = "Title"
@@ -87,6 +90,15 @@ class PostTableViewCell: UITableViewCell {
             
         ])
         
+        
+        
+    }
+    
+    @objc
+    func didTapPost(){
+        if let post {
+            CoreDateServices.shared.addPostToFavorites(post)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -94,10 +106,18 @@ class PostTableViewCell: UITableViewCell {
     }
     
     func setup(post: Post){
+        self.post = post
         labelTitle.text = post.author
         image.image = UIImage(named: post.image)
         labelDescription.text = post.description
         labelLikes.text = "Likes: \(post.likes)"
         labelViews.text = "Views: \(post.views)"
+        
+        if tapRecognizer {
+            print("11")
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapPost))
+            tapRecognizer.numberOfTapsRequired = 2
+            self.addGestureRecognizer(tapRecognizer)
+        }
     }
 }

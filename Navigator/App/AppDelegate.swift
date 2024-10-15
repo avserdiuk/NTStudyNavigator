@@ -36,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         try? Auth.auth().signOut()
+        CoreDateServices.shared.saveContext()
     }
 }
 

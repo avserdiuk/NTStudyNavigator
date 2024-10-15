@@ -26,20 +26,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let contentViewController = UINavigationController(rootViewController: ContentViewController())
         let passwordViewController = UINavigationController(rootViewController: PasswordViewController())
+        let favoriteViewController = UINavigationController(rootViewController: FavoriteViewController())
         
         
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [feedViewController, profileViewController, contentViewController, passwordViewController]
+        tabBarController.viewControllers = [feedViewController, contentViewController, passwordViewController, profileViewController, favoriteViewController]
         
         let feedItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "newspaper"), tag: 0)
         let profileItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle"), tag: 1)
         let contentItem = UITabBarItem(title: "Content", image: UIImage(systemName: "folder"), tag: 2)
         let passwordItem = UITabBarItem(title: "Password", image: UIImage(systemName: "lock.square"), tag: 3)
+        let favoriteItem = UITabBarItem(title: "Favorite", image: UIImage(systemName: "star.bubble"), tag: 4)
         
         feedViewController.tabBarItem = feedItem
         profileViewController.tabBarItem = profileItem
         contentViewController.tabBarItem = contentItem
         passwordViewController.tabBarItem = passwordItem
+        favoriteViewController.tabBarItem = favoriteItem
+        
+        //CoreDateServices.shared.clear()
         
         
 //        let appConfig = AppConfiguration.first

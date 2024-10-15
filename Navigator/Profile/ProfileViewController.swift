@@ -156,6 +156,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource{
         
         if indexPath.section == 1 {
             let cell = PostTableViewCell()
+            cell.tapRecognizer = true
             cell.setup(post: posts[indexPath.row])
             cell.selectionStyle = .none
             return cell
