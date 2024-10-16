@@ -14,7 +14,6 @@ class CoreDateServices {
     var posts: [CDPost] = []
     
     private init(){
-        //getPosts()
     }
     
     lazy var persistentContainer: NSPersistentContainer = {
@@ -25,8 +24,10 @@ class CoreDateServices {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+        
         return container
     }()
+    
     
     func getPosts(){
         let context = persistentContainer.viewContext
@@ -39,9 +40,22 @@ class CoreDateServices {
         }
     }
     
+    func search(text: String){
+        let context = persistentContainer.viewContext
+        let request = CDPost.fetchRequest()
+        request.predicate = NSPredicate(format: "author == %@", text)
+        
+        do {
+            posts = try context.fetch(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     func clear(){
         let context = persistentContainer.viewContext
         let request: NSFetchRequest<CDPost> = CDPost.fetchRequest()
+        //request.predicate = NSPredicate()
         do {
             let posts = try context.fetch(request)
             
@@ -55,16 +69,42 @@ class CoreDateServices {
         }
     }
     
+    func deletePostFromFavorites(_ post: Post) {
+        let context = persistentContainer.viewContext
+        let request: NSFetchRequest<CDPost> = CDPost.fetchRequest()
+        request.predicate = NSPredicate(format: "author == %@", post.author)
+        print(post.author)
+        do {
+            let posts = try context.fetch(request)
+            print(posts.count)
+            context.delete(posts.first!)
+            saveContext()
+            getPosts()
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+    }
+    
+   
+    
     func addPostToFavorites(_ post: Post) {
-       let context = persistentContainer.viewContext
-       let newPost = CDPost(context: context)
-        newPost.desc = post.description
-        newPost.author = post.author
-        newPost.image = post.image
-        newPost.likes = Int32(post.likes)
-        newPost.views = Int32(post.views)
-        saveContext()
-        print("post added to favorites")
+        let _: Void = persistentContainer.performBackgroundTask { context in
+            let newPost = CDPost(context: context)
+            newPost.desc = post.description
+            newPost.author = post.author
+            newPost.image = post.image
+            newPost.likes = Int32(post.likes)
+            newPost.views = Int32(post.views)
+            
+                do {
+                    try context.save()
+                    print("post added to favorites")
+                } catch {
+                    print(error.localizedDescription)
+                }
+             
+        }
     }
 
     func saveContext () {

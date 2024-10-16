@@ -22,6 +22,10 @@ class FavoriteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Избранное"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refresh))
+        navigationItem.rightBarButtonItems?.append(UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search)))
+        
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -35,7 +39,25 @@ class FavoriteViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(#function)
+        CoreDateServices.shared.getPosts()
+        tableView.reloadData()
+    }
+    
+    @objc
+    func search(){
+        let alert = UIAlertController(title: "Поиск", message: "Введите автора", preferredStyle: .alert)
+        alert.addTextField()
+        alert.textFields?.first?.placeholder = "Автор"
+        alert.addAction(UIAlertAction(title: "Поиск", style: .default, handler: { UIAlertAction in
+            
+            CoreDateServices.shared.search(text: alert.textFields?.first?.text ?? "")
+            self.tableView.reloadData()
+        }))
+        present(alert, animated: true)
+    }
+    
+    @objc
+    func refresh(){
         CoreDateServices.shared.getPosts()
         tableView.reloadData()
     }
@@ -59,5 +81,13 @@ extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let action = UIContextualAction(style: .destructive, title: "Удалить") {_,_,_ in
+            CoreDateServices.shared.deletePostFromFavorites(posts[indexPath.row])
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+        return UISwipeActionsConfiguration(actions: [action])
+    }
     
 }

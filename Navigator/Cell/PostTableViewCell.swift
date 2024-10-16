@@ -114,7 +114,6 @@ class PostTableViewCell: UITableViewCell {
         labelViews.text = "Views: \(post.views)"
         
         if tapRecognizer {
-            print("11")
             let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapPost))
             tapRecognizer.numberOfTapsRequired = 2
             self.addGestureRecognizer(tapRecognizer)
