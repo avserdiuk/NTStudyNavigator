@@ -7,8 +7,20 @@
 
 import UIKit
 import StorageServices
+import CoreData
 
 class FavoriteViewController: UIViewController {
+    
+    private lazy var fetchController: NSFetchedResultsController = {
+        
+        let fetchRequest = CDPost.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "author", ascending: true)]
+        let context = CoreDateServices.shared.persistentContainer.viewContext
+        
+        let f = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        f.delegate = self
+        return f
+    }()
     
     private lazy var tableView : UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
@@ -39,8 +51,16 @@ class FavoriteViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        CoreDateServices.shared.getPosts()
-        tableView.reloadData()
+        fetchPerform()
+    }
+    
+    func fetchPerform(){
+        do {
+            try fetchController.performFetch()
+            tableView.reloadData()
+        } catch {
+            fatalError("Failed to perform fetch: \(error.localizedDescription)")
+        }
     }
     
     @objc
@@ -49,33 +69,35 @@ class FavoriteViewController: UIViewController {
         alert.addTextField()
         alert.textFields?.first?.placeholder = "Автор"
         alert.addAction(UIAlertAction(title: "Поиск", style: .default, handler: { UIAlertAction in
-            
-            CoreDateServices.shared.search(text: alert.textFields?.first?.text ?? "")
-            self.tableView.reloadData()
+
+            self.fetchController.fetchRequest.predicate = NSPredicate(format: "author = %@", alert.textFields?.first?.text ?? "")
+            self.fetchPerform()
+
         }))
         present(alert, animated: true)
     }
     
     @objc
     func refresh(){
-        CoreDateServices.shared.getPosts()
-        tableView.reloadData()
+        self.fetchController.fetchRequest.predicate = nil
+        self.fetchPerform()
     }
 }
 
-extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource {
+extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        CoreDateServices.shared.posts.count
+        return fetchController.sections?[0].numberOfObjects ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = PostTableViewCell()
         let post = Post(
-            author: CoreDateServices.shared.posts[indexPath.row].author!,
-            description: CoreDateServices.shared.posts[indexPath.row].desc!,
-            image: CoreDateServices.shared.posts[indexPath.row].image!,
-            likes: Int(CoreDateServices.shared.posts[indexPath.row].likes),
-            views: Int(CoreDateServices.shared.posts[indexPath.row].views)        )
+            author: fetchController.fetchedObjects?[indexPath.row].author ?? "",
+            description: fetchController.fetchedObjects?[indexPath.row].desc ?? "",
+            image: fetchController.fetchedObjects?[indexPath.row].image ?? "",
+            likes: Int(fetchController.fetchedObjects?[indexPath.row].likes ?? 0),
+            views: Int(fetchController.fetchedObjects?[indexPath.row].views ?? 0)
+        )
         cell.setup(post: post)
         cell.selectionStyle = .none
         return cell
@@ -85,9 +107,17 @@ extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource {
         
         let action = UIContextualAction(style: .destructive, title: "Удалить") {_,_,_ in
             CoreDateServices.shared.deletePostFromFavorites(posts[indexPath.row])
-            tableView.deleteRows(at: [indexPath], with: .fade)
         }
         return UISwipeActionsConfiguration(actions: [action])
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?){
+        switch type {
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .fade)
+        default:
+            return
+        }
     }
     
 }

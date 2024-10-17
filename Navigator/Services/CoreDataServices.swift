@@ -10,11 +10,7 @@ import StorageServices
 
 class CoreDateServices {
     static let shared = CoreDateServices()
-    
-    var posts: [CDPost] = []
-    
-    private init(){
-    }
+    private init(){}
     
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Navigator")
@@ -28,47 +24,6 @@ class CoreDateServices {
         return container
     }()
     
-    
-    func getPosts(){
-        let context = persistentContainer.viewContext
-        let request: NSFetchRequest<CDPost> = CDPost.fetchRequest()
-        do {
-            posts = try context.fetch(request)
-            print(posts.count)
-        } catch {
-            print("Error fetching posts: \(error)")
-        }
-    }
-    
-    func search(text: String){
-        let context = persistentContainer.viewContext
-        let request = CDPost.fetchRequest()
-        request.predicate = NSPredicate(format: "author == %@", text)
-        
-        do {
-            posts = try context.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func clear(){
-        let context = persistentContainer.viewContext
-        let request: NSFetchRequest<CDPost> = CDPost.fetchRequest()
-        //request.predicate = NSPredicate()
-        do {
-            let posts = try context.fetch(request)
-            
-            posts.forEach {
-                context.delete($0)
-            }
-            
-            saveContext()
-        } catch {
-            print("Error fetching posts: \(error)")
-        }
-    }
-    
     func deletePostFromFavorites(_ post: Post) {
         let context = persistentContainer.viewContext
         let request: NSFetchRequest<CDPost> = CDPost.fetchRequest()
@@ -76,17 +31,13 @@ class CoreDateServices {
         print(post.author)
         do {
             let posts = try context.fetch(request)
-            print(posts.count)
             context.delete(posts.first!)
             saveContext()
-            getPosts()
         } catch {
             print(error.localizedDescription)
         }
         
     }
-    
-   
     
     func addPostToFavorites(_ post: Post) {
         let _: Void = persistentContainer.performBackgroundTask { context in
